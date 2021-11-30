@@ -1,7 +1,7 @@
 import copy
 
 class move():
-    def __init__(self, board, piece, origin, destination, eats = False):
+    def __init__(self, board, piece, origin, destination, eats = None):
         self.piece = piece
         self.origin = origin
         self.board = board
@@ -47,7 +47,7 @@ class game():
                                     moves.append(move(self.board, piec, case, (case[0], case[1]+i)))
                                 else:
                                     if self.board.layout[case[1]+i][case[0]].color != piec.color:
-                                        moves.append(move(self.board, piec, case, (case[0], case[1]+i), True))
+                                        moves.append(move(self.board, piec, case, (case[0], case[1]+i), self.board.layout[case[1]+i][case[0]]))
                                     break
                             else:
                                 break
@@ -57,7 +57,7 @@ class game():
                                     moves.append(move(self.board, piec, case, (case[0], case[1]-i)))
                                 else:
                                     if self.board.layout[case[1]-i][case[0]].color != piec.color:
-                                        moves.append(move(self.board, piec, case, (case[0], case[1]-i), True))
+                                        moves.append(move(self.board, piec, case, (case[0], case[1]-i), self.board.layout[case[1]-i][case[0]]))
                                     break
                             else:
                                 break
@@ -67,7 +67,7 @@ class game():
                                     moves.append(move(self.board, piec, case, (case[0]+i, case[1])))
                                 else:
                                     if self.board.layout[case[1]][case[0]+i].color != piec.color:
-                                        moves.append(move(self.board, piec, case, (case[0]+i, case[1]), True))
+                                        moves.append(move(self.board, piec, case, (case[0]+i, case[1]), self.board.layout[case[1]][case[0]+i]))
                                     break
                             else:
                                 break
@@ -77,7 +77,7 @@ class game():
                                     moves.append(move(self.board, piec, case, (case[0]-i, case[1])))
                                 else:
                                     if self.board.layout[case[1]][case[0]-i].color != piec.color:
-                                        moves.append(move(self.board, piec, case, (case[0]-i, case[1]), True))
+                                        moves.append(move(self.board, piec, case, (case[0]-i, case[1]), self.board.layout[case[1]][case[0]-i]))
                                     break
                             else:
                                 break
