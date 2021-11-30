@@ -9,6 +9,15 @@ class move():
         pass
 
 
+lettersName = {
+    "rook": {"white": "♖", "black": "♜"},
+    "knight": {"white": "♘", "black": "♞"},
+    "bishop": {"white": "♗", "black": "♝"},
+    "king": {"white": "♔", "black": "♚"},
+    "queen": {"white": "♕", "black": "♛"},
+    "pawn": {"white": "♙", "black": "♟"}
+}
+
 class game():
     def __init__(self, board):
         self.board = board
@@ -16,6 +25,14 @@ class game():
         self.nTurn = 1
     def move(self, move):
         pass
+    def printBoard(self):
+        for row in self.board.layout:
+            for piec in row:
+                if piec:
+                    print(lettersName[piec.type][piec.color], end=";")
+                else:
+                    print(" ", end=";")
+            print()
     def legalMoves(self):
         moves = []
         case = (0, 0)
@@ -78,3 +95,4 @@ class board():
 newBoard = board()
 theGame = game(newBoard)
 print(theGame.legalMoves())
+theGame.printBoard()
