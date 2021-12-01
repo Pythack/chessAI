@@ -45,7 +45,12 @@ class game():
         boardD = self.board
         boardD.layout[move.destination[1]][move.destination[0]] = move.piece
         boardD.layout[move.origin[1]][move.origin[0]] = None
-        return False
+        self.nTurn +=1
+        if self.turn == "white":
+            self.turn = "black"
+        else:
+            self.turn = "white"
+        return True
     def legalMoves(self, all = False):
         moves = []
         case = (0, 0)
@@ -257,8 +262,20 @@ class board():
             case = (0, case[1]+1)
         return moves
 
-newBoard = board()
-theGame = game(newBoard)
-print([(i.piece.type, i.destination) for i in theGame.legalMoves()])
-#theGame.move(theGame.legalMoves()[0])
-theGame.board.printBoard()
+
+if __name__ == "__main__":
+    newBoard = board()
+    theGame = game(newBoard)
+    while True:
+        index0 = 0
+        print("Available moves:")
+        for i in theGame.legalMoves():
+            print("---")
+            print(index0)
+            i.simulate().printBoard()
+            index0 += 1
+        print("The current board:")
+        theGame.board.printBoard()
+        index = int(input())
+        theGame.move(theGame.legalMoves()[index])
+    theGame.board.printBoard()
