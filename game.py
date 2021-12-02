@@ -19,7 +19,7 @@ class move():
                 if i.eats.type == "king" and i.eats.color != i.piece.color:
                     return False
         return True
-    def toStr(self):
+    def toStr(self, sep = ""):
         xToChar = {
             0: "A",
             1: "B",
@@ -32,7 +32,7 @@ class move():
         }
         oc = xToChar[self.origin[0]] + str(self.origin[1]+1)
         dc = xToChar[self.destination[0]] + str(self.destination[1]+1)
-        return oc + " " + dc
+        return oc + sep + dc
 
 
 lettersName = {
@@ -50,7 +50,6 @@ def checkColor(all, turn, piec):
         checkColor = True
     return checkColor
 
-
 class game():
     def __init__(self, board):
         self.board = board
@@ -66,6 +65,30 @@ class game():
         else:
             self.turn = "white"
         return True
+    def moveLit(self, lit):
+        charToX = {
+            "A": 0,
+            "B": 1,
+            "C": 2,
+            "D": 3,
+            "E": 4,
+            "F": 5,
+            "G": 6,
+            "H": 7
+        }
+        movArray = lit.strip(" ")
+        movArray = [char for char in movArray]
+        origin = (charToX[movArray[0]], int(movArray[1])-1)
+        destination = (charToX[movArray[2]], int(movArray[3])-1)
+        self.move(move(self.board, self.board.layout[origin[1]][origin[0]], origin, destination, self.board.layout[destination[1]][destination[0]]))
+    def isGameOver(self):
+        if len(self.legalMoves()) == 0:
+            wonCodes = {
+                "black": "White wins",
+                "white": "Black wins"
+            }
+            return wonCodes[self.turn]
+        return False
     def legalMoves(self, all = False):
         moves = []
         case = (0, 0)
@@ -305,7 +328,7 @@ class piece():
         pass
     
 class board():
-    def __init__(self, board = [[piece("rook", "black"), piece("knight", "black"), piece("bishop", "black"), piece("king", "black"), piece("queen", "black"), piece("bishop", "black"), piece("knight", "black"), piece("rook", "black")], [piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black")], [None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white")], [piece("rook", "white"), piece("knight", "white"), piece("bishop", "white"), piece("king", "white"), piece("queen", "white"), piece("bishop", "white"), piece("knight", "white"), piece("rook", "white")]]):
+    def __init__(self, board = [[piece("rook", "black"), piece("knight", "black"), piece("bishop", "black"), piece("queen", "black"), piece("king", "black"), piece("bishop", "black"), piece("knight", "black"), piece("rook", "black")], [piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black")], [None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white")], [piece("rook", "white"), piece("knight", "white"), piece("bishop", "white"), piece("queen", "white"), piece("king", "white"), piece("bishop", "white"), piece("knight", "white"), piece("rook", "white")]]):
         self.layout = board
     def printBoard(self):
         print("  A;B;C;D;E;F;G;H")
@@ -541,14 +564,17 @@ class board():
             case = (0, case[1]+1)
         return moves
 
-
 if __name__ == "__main__":
     newBoard = board()
     theGame = game(newBoard)
     while True:
         index0 = 0
+        legalMoves = theGame.legalMoves()
+        if theGame.isGameOver():
+            reasonOfEnd = theGame.isGameOver()
+            break
         print("Available moves:")
-        for i in theGame.legalMoves():
+        for i in legalMoves:
             print("---")
             print(index0)
             print(i.piece.type)
@@ -556,7 +582,16 @@ if __name__ == "__main__":
             i.simulate().printBoard()
             index0 += 1
         print("The current board:")
+        print(theGame.turn + "'s turn")
         theGame.board.printBoard()
-        index = int(input())
-        theGame.move(theGame.legalMoves()[index])
-    #theGame.board.printBoard()
+        litMoves = []
+        for i in legalMoves:
+            litMoves.append(i.toStr())
+        index = ""
+        while not index in litMoves:
+            index = input().upper()
+            if not index in litMoves:
+                print("Move not allowed")
+        theGame.moveLit(index)
+    print(reasonOfEnd)
+    theGame.board.printBoard()
