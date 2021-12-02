@@ -150,6 +150,33 @@ class game():
                                     else:
                                         if self.board.layout[case[1]+y][case[0]+x].color != piec.color:
                                             moves.append(move(self.board, piec, case, (case[0]+x, case[1]+y), self.board.layout[case[1]+y][case[0]+x]))
+                    if piec.type == "pawn" and checkColor(all, self.turn, piec):
+                        if piec.color == "white":
+                            if case[1]+1 <= 7:
+                                if self.board.layout[case[1]+1][case[0]] == None:
+                                    moves.append(move(self.board, piec, case, (case[0], case[1]+1)))
+                                    if case[1] == 1:
+                                        if self.board.layout[case[1]+2][case[0]] == None:
+                                            moves.append(move(self.board, piec, case, (case[0], case[1]+2)))
+                            for x in range(-1, 2):
+                                if x == 0:
+                                    continue
+                                if case[0]+x >= 0 and case[0]+x <= 7 and case[1]+1 <= 7 and self.board.layout[case[1]+1][case[0]+x] != None:
+                                    if self.board.layout[case[1]+1][case[0]+x].color != piec.color:
+                                        moves.append(move(self.board, piec, case, (case[0]+x, case[1]+1), self.board.layout[case[1]+1][case[0]+x]))
+                        else:
+                            if case[1]-1 >= 0:
+                                if self.board.layout[case[1]-1][case[0]] == None:
+                                    moves.append(move(self.board, piec, case, (case[0], case[1]-1)))
+                                    if case[1] == 6:
+                                        if self.board.layout[case[1]-2][case[0]] == None:
+                                            moves.append(move(self.board, piec, case, (case[0], case[1]-2)))
+                            for x in range(-1, 2):
+                                if x == 0:
+                                    continue
+                                if case[0]+x >= 0 and case[0]+x <= 7 and case[1]-1 <= 7 and self.board.layout[case[1]-1][case[0]+x] != None:
+                                    if self.board.layout[case[1]-1][case[0]+x].color != piec.color:
+                                        moves.append(move(self.board, piec, case, (case[0]+x, case[1]-1), self.board.layout[case[1]-1][case[0]+x]))
                     if piec.type == "king" and checkColor(all, self.turn, piec):
                         for x in range(-1, 2):
                             for y in range(-1, 2):
@@ -161,6 +188,87 @@ class game():
                                     else:
                                         if self.board.layout[case[1]+y][case[0]+x].color != piec.color:
                                             moves.append(move(self.board, piec, case, (case[0]+x, case[1]+y), self.board.layout[case[1]+y][case[0]+x]))
+                    if piec.type == "queen" and checkColor(all, self.turn, piec):
+                        for i in range(1, 8):
+                            if case[1]+i <= 7:
+                                if self.board.layout[case[1]+i][case[0]] == None:
+                                    moves.append(move(self.board, piec, case, (case[0], case[1]+i)))
+                                else:
+                                    if self.board.layout[case[1]+i][case[0]].color != piec.color:
+                                        moves.append(move(self.board, piec, case, (case[0], case[1]+i), self.board.layout[case[1]+i][case[0]]))
+                                    break
+                            else:
+                                break
+                        for i in range(1, 8):
+                            if case[1]-i >= 0:
+                                if self.board.layout[case[1]-i][case[0]] == None:
+                                    moves.append(move(self.board, piec, case, (case[0], case[1]-i)))
+                                else:
+                                    if self.board.layout[case[1]-i][case[0]].color != piec.color:
+                                        moves.append(move(self.board, piec, case, (case[0], case[1]-i), self.board.layout[case[1]-i][case[0]]))
+                                    break
+                            else:
+                                break
+                        for i in range(1, 8):
+                            if case[0]+i <= 7:
+                                if self.board.layout[case[1]][case[0]+i] == None:
+                                    moves.append(move(self.board, piec, case, (case[0]+i, case[1])))
+                                else:
+                                    if self.board.layout[case[1]][case[0]+i].color != piec.color:
+                                        moves.append(move(self.board, piec, case, (case[0]+i, case[1]), self.board.layout[case[1]][case[0]+i]))
+                                    break
+                            else:
+                                break
+                        for i in range(1, 8):
+                            if case[0]-i >= 0:
+                                if self.board.layout[case[1]][case[0]-i] == None:
+                                    moves.append(move(self.board, piec, case, (case[0]-i, case[1])))
+                                else:
+                                    if self.board.layout[case[1]][case[0]-i].color != piec.color:
+                                        moves.append(move(self.board, piec, case, (case[0]-i, case[1]), self.board.layout[case[1]][case[0]-i]))
+                                    break
+                            else:
+                                break
+                        for i in range(1, 8):
+                            if case[1]+i <= 7 and case[0]+i <= 7:
+                                if self.board.layout[case[1]+i][case[0]+i] == None:
+                                    moves.append(move(self.board, piec, case, (case[0]+i, case[1]+i)))
+                                else:
+                                    if self.board.layout[case[1]+i][case[0]+i].color != piec.color:
+                                        moves.append(move(self.board, piec, case, (case[0]+i, case[1]+i), self.board.layout[case[1]+i][case[0]+i]))
+                                    break
+                            else:
+                                break
+                        for i in range(1, 8):
+                            if case[1]-i >= 0 and case[0]-i >= 0:
+                                if self.board.layout[case[1]-i][case[0]-i] == None:
+                                    moves.append(move(self.board, piec, case, (case[0]-i, case[1]-i)))
+                                else:
+                                    if self.board.layout[case[1]-i][case[0]-i].color != piec.color:
+                                        moves.append(move(self.board, piec, case, (case[0]-i, case[1]-i), self.board.layout[case[1]-i][case[0]-i]))
+                                    break
+                            else:
+                                break
+                        for i in range(1, 8):
+                            if case[0]+i <= 7 and case[1]-i >= 0:
+                                if self.board.layout[case[1]-i][case[0]+i] == None:
+                                    moves.append(move(self.board, piec, case, (case[0]+i, case[1]-i)))
+                                else:
+                                    if self.board.layout[case[1]-i][case[0]+i].color != piec.color:
+                                        moves.append(move(self.board, piec, case, (case[0]+i, case[1]-i), self.board.layout[case[1]-i][case[0]+i]))
+                                    break
+                            else:
+                                break
+                        for i in range(1, 8):
+                            if case[0]-i >= 0 and case[1]+i <= 7:
+                                if self.board.layout[case[1]+i][case[0]-i] == None:
+                                    moves.append(move(self.board, piec, case, (case[0]-i, case[1]+i)))
+                                else:
+                                    if self.board.layout[case[1]+i][case[0]-i].color != piec.color:
+                                        moves.append(move(self.board, piec, case, (case[0]-i, case[1]+i), self.board.layout[case[1]+i][case[0]-i]))
+                                    break
+                            else:
+                                break
                 case = (case[0]+1, case[1])
             case = (0, case[1]+1)
         finalMoves = []
@@ -182,7 +290,7 @@ class piece():
         pass
     
 class board():
-    def __init__(self, board = [[piece("rook", "white"), piece("knight", "white"), piece("bishop", "white"), piece("king", "white"), piece("queen", "white"), piece("bishop", "white"), piece("knight", "white"), piece("rook", "white")], [piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white")], [None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black")], [piece("rook", "black"), piece("knight", "black"), piece("bishop", "black"), piece("king", "black"), piece("queen", "black"), piece("bishop", "black"), piece("knight", "black"), piece("rook", "black")]]):
+    def __init__(self, board = [[piece("rook", "white"), piece("knight", "white"), piece("bishop", "white"), piece("king", "white"), piece("queen", "white"), piece("bishop", "white"), piece("knight", "white"), piece("rook", "white")], [piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white")], [None, piece("queen", "black"), None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [None, None, piece("queen", "white"), None, None, None, None, None], [piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black")], [piece("rook", "black"), piece("knight", "black"), piece("bishop", "black"), piece("king", "black"), piece("queen", "black"), piece("bishop", "black"), piece("knight", "black"), piece("rook", "black")]]):
         self.layout = board
     def printBoard(self):
         for row in self.layout:
@@ -302,6 +410,87 @@ class board():
                                     else:
                                         if self.layout[case[1]+y][case[0]+x].color != piec.color:
                                             moves.append(move(self, piec, case, (case[0]+x, case[1]+y), self.layout[case[1]+y][case[0]+x]))
+                    if piec.type == "queen":
+                        for i in range(1, 8):
+                            if case[1]+i <= 7:
+                                if self.layout[case[1]+i][case[0]] == None:
+                                    moves.append(move(self, piec, case, (case[0], case[1]+i)))
+                                else:
+                                    if self.layout[case[1]+i][case[0]].color != piec.color:
+                                        moves.append(move(self, piec, case, (case[0], case[1]+i), self.layout[case[1]+i][case[0]]))
+                                    break
+                            else:
+                                break
+                        for i in range(1, 8):
+                            if case[1]-i >= 0:
+                                if self.layout[case[1]-i][case[0]] == None:
+                                    moves.append(move(self, piec, case, (case[0], case[1]-i)))
+                                else:
+                                    if self.layout[case[1]-i][case[0]].color != piec.color:
+                                        moves.append(move(self, piec, case, (case[0], case[1]-i), self.layout[case[1]-i][case[0]]))
+                                    break
+                            else:
+                                break
+                        for i in range(1, 8):
+                            if case[0]+i <= 7:
+                                if self.layout[case[1]][case[0]+i] == None:
+                                    moves.append(move(self, piec, case, (case[0]+i, case[1])))
+                                else:
+                                    if self.layout[case[1]][case[0]+i].color != piec.color:
+                                        moves.append(move(self, piec, case, (case[0]+i, case[1]), self.layout[case[1]][case[0]+i]))
+                                    break
+                            else:
+                                break
+                        for i in range(1, 8):
+                            if case[0]-i >= 0:
+                                if self.layout[case[1]][case[0]-i] == None:
+                                    moves.append(move(self, piec, case, (case[0]-i, case[1])))
+                                else:
+                                    if self.layout[case[1]][case[0]-i].color != piec.color:
+                                        moves.append(move(self, piec, case, (case[0]-i, case[1]), self.layout[case[1]][case[0]-i]))
+                                    break
+                            else:
+                                break
+                        for i in range(1, 8):
+                            if case[1]+i <= 7 and case[0]+i <= 7:
+                                if self.layout[case[1]+i][case[0]+i] == None:
+                                    moves.append(move(self, piec, case, (case[0]+i, case[1]+i)))
+                                else:
+                                    if self.layout[case[1]+i][case[0]+i].color != piec.color:
+                                        moves.append(move(self, piec, case, (case[0]+i, case[1]+i), self.layout[case[1]+i][case[0]+i]))
+                                    break
+                            else:
+                                break
+                        for i in range(1, 8):
+                            if case[1]-i >= 0 and case[0]-i >= 0:
+                                if self.layout[case[1]-i][case[0]-i] == None:
+                                    moves.append(move(self, piec, case, (case[0]-i, case[1]-i)))
+                                else:
+                                    if self.layout[case[1]-i][case[0]-i].color != piec.color:
+                                        moves.append(move(self, piec, case, (case[0]-i, case[1]-i), self.layout[case[1]-i][case[0]-i]))
+                                    break
+                            else:
+                                break
+                        for i in range(1, 8):
+                            if case[0]+i <= 7 and case[1]-i >= 0:
+                                if self.layout[case[1]-i][case[0]+i] == None:
+                                    moves.append(move(self, piec, case, (case[0]+i, case[1]-i)))
+                                else:
+                                    if self.layout[case[1]-i][case[0]+i].color != piec.color:
+                                        moves.append(move(self, piec, case, (case[0]+i, case[1]-i), self.layout[case[1]-i][case[0]+i]))
+                                    break
+                            else:
+                                break
+                        for i in range(1, 8):
+                            if case[0]-i >= 0 and case[1]+i <= 7:
+                                if self.layout[case[1]+i][case[0]-i] == None:
+                                    moves.append(move(self, piec, case, (case[0]-i, case[1]+i)))
+                                else:
+                                    if self.layout[case[1]+i][case[0]-i].color != piec.color:
+                                        moves.append(move(self, piec, case, (case[0]-i, case[1]+i), self.layout[case[1]+i][case[0]-i]))
+                                    break
+                            else:
+                                break
                 case = (case[0]+1, case[1])
             case = (0, case[1]+1)
         return moves
@@ -310,15 +499,17 @@ class board():
 if __name__ == "__main__":
     newBoard = board()
     theGame = game(newBoard)
-    index0 = 0
-    print("Available moves:")
-    for i in theGame.legalMoves():
-        print("---")
-        print(index0)
-        print(i.piece.type)
-        i.simulate().printBoard()
-        index0 += 1
-    print("The current board:")
-    theGame.board.printBoard()
-    #index = int(input())
+    while True:
+        index0 = 0
+        print("Available moves:")
+        for i in theGame.legalMoves():
+            print("---")
+            print(index0)
+            print(i.piece.type)
+            i.simulate().printBoard()
+            index0 += 1
+        print("The current board:")
+        theGame.board.printBoard()
+        index = int(input())
+        theGame.move(theGame.legalMoves()[index])
     #theGame.board.printBoard()
