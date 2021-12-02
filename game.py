@@ -19,6 +19,20 @@ class move():
                 if i.eats.type == "king" and i.eats.color != i.piece.color:
                     return False
         return True
+    def toStr(self):
+        xToChar = {
+            0: "A",
+            1: "B",
+            2: "C",
+            3: "D",
+            4: "E",
+            5: "F",
+            6: "G",
+            7: "H"
+        }
+        oc = xToChar[self.origin[0]] + str(self.origin[1]+1)
+        dc = xToChar[self.destination[0]] + str(self.destination[1]+1)
+        return oc + " " + dc
 
 
 lettersName = {
@@ -30,29 +44,12 @@ lettersName = {
     "pawn": {"white": "♙", "black": "♟"}
 }
 
-xToChar = {
-    0: "A",
-    1: "B",
-    2: "C",
-    3: "D",
-    4: "E",
-    5: "F",
-    6: "G",
-    7: "H"
-}
-
 def checkColor(all, turn, piec):
     checkColor = piec.color == turn
     if all:
         checkColor = True
     return checkColor
 
-def moveToStr(mov):
-    oc = xToChar[mov.origin[0]] + str(mov.origin[1])
-    dc = xToChar[mov.destination[0]] + str(mov.destination[1])
-    return oc + " " + dc
-    
-    
 
 class game():
     def __init__(self, board):
@@ -169,7 +166,7 @@ class game():
                                         if self.board.layout[case[1]+y][case[0]+x].color != piec.color:
                                             moves.append(move(self.board, piec, case, (case[0]+x, case[1]+y), self.board.layout[case[1]+y][case[0]+x]))
                     if piec.type == "pawn" and checkColor(all, self.turn, piec):
-                        if piec.color == "white":
+                        if piec.color == "black":
                             if case[1]+1 <= 7:
                                 if self.board.layout[case[1]+1][case[0]] == None:
                                     moves.append(move(self.board, piec, case, (case[0], case[1]+1)))
@@ -308,16 +305,20 @@ class piece():
         pass
     
 class board():
-    def __init__(self, board = [[piece("rook", "white"), piece("knight", "white"), piece("bishop", "white"), piece("king", "white"), piece("queen", "white"), piece("bishop", "white"), piece("knight", "white"), piece("rook", "white")], [piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white")], [None, piece("queen", "black"), None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [None, None, piece("queen", "white"), None, None, None, None, None], [piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black")], [piece("rook", "black"), piece("knight", "black"), piece("bishop", "black"), piece("king", "black"), piece("queen", "black"), piece("bishop", "black"), piece("knight", "black"), piece("rook", "black")]]):
+    def __init__(self, board = [[piece("rook", "black"), piece("knight", "black"), piece("bishop", "black"), piece("king", "black"), piece("queen", "black"), piece("bishop", "black"), piece("knight", "black"), piece("rook", "black")], [piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black")], [None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white")], [piece("rook", "white"), piece("knight", "white"), piece("bishop", "white"), piece("king", "white"), piece("queen", "white"), piece("bishop", "white"), piece("knight", "white"), piece("rook", "white")]]):
         self.layout = board
     def printBoard(self):
+        print("  A;B;C;D;E;F;G;H")
+        rowN = 1
         for row in self.layout:
+            print(str(rowN)+" ", end="")
             for piec in row:
                 if piec:
                     print(lettersName[piec.type][piec.color], end=";")
                 else:
                     print(" ", end=";")
             print()
+            rowN += 1
     def legalMoves(self):
         moves = []
         case = (0, 0)
@@ -418,7 +419,7 @@ class board():
                                         if self.layout[case[1]+y][case[0]+x].color != piec.color:
                                             moves.append(move(self, piec, case, (case[0]+x, case[1]+y), self.layout[case[1]+y][case[0]+x]))
                     if piec.type == "pawn":
-                        if piec.color == "white":
+                        if piec.color == "black":
                             if case[1]+1 <= 7:
                                 if self.layout[case[1]+1][case[0]] == None:
                                     moves.append(move(self, piec, case, (case[0], case[1]+1)))
@@ -551,6 +552,7 @@ if __name__ == "__main__":
             print("---")
             print(index0)
             print(i.piece.type)
+            print(i.toStr())
             i.simulate().printBoard()
             index0 += 1
         print("The current board:")
