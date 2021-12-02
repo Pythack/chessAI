@@ -30,11 +30,29 @@ lettersName = {
     "pawn": {"white": "♙", "black": "♟"}
 }
 
+xToChar = {
+    0: "A",
+    1: "B",
+    2: "C",
+    3: "D",
+    4: "E",
+    5: "F",
+    6: "G",
+    7: "H"
+}
+
 def checkColor(all, turn, piec):
     checkColor = piec.color == turn
     if all:
         checkColor = True
     return checkColor
+
+def moveToStr(mov):
+    oc = xToChar[mov.origin[0]] + str(mov.origin[1])
+    dc = xToChar[mov.destination[0]] + str(mov.destination[1])
+    return oc + " " + dc
+    
+    
 
 class game():
     def __init__(self, board):
