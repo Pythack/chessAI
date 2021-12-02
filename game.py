@@ -399,6 +399,33 @@ class board():
                                     else:
                                         if self.layout[case[1]+y][case[0]+x].color != piec.color:
                                             moves.append(move(self, piec, case, (case[0]+x, case[1]+y), self.layout[case[1]+y][case[0]+x]))
+                    if piec.type == "pawn":
+                        if piec.color == "white":
+                            if case[1]+1 <= 7:
+                                if self.layout[case[1]+1][case[0]] == None:
+                                    moves.append(move(self, piec, case, (case[0], case[1]+1)))
+                                    if case[1] == 1:
+                                        if self.layout[case[1]+2][case[0]] == None:
+                                            moves.append(move(self, piec, case, (case[0], case[1]+2)))
+                            for x in range(-1, 2):
+                                if x == 0:
+                                    continue
+                                if case[0]+x >= 0 and case[0]+x <= 7 and case[1]+1 <= 7 and self.layout[case[1]+1][case[0]+x] != None:
+                                    if self.layout[case[1]+1][case[0]+x].color != piec.color:
+                                        moves.append(move(self, piec, case, (case[0]+x, case[1]+1), self.layout[case[1]+1][case[0]+x]))
+                        else:
+                            if case[1]-1 >= 0:
+                                if self.layout[case[1]-1][case[0]] == None:
+                                    moves.append(move(self, piec, case, (case[0], case[1]-1)))
+                                    if case[1] == 6:
+                                        if self.layout[case[1]-2][case[0]] == None:
+                                            moves.append(move(self, piec, case, (case[0], case[1]-2)))
+                            for x in range(-1, 2):
+                                if x == 0:
+                                    continue
+                                if case[0]+x >= 0 and case[0]+x <= 7 and case[1]-1 <= 7 and self.layout[case[1]-1][case[0]+x] != None:
+                                    if self.layout[case[1]-1][case[0]+x].color != piec.color:
+                                        moves.append(move(self, piec, case, (case[0]+x, case[1]-1), self.layout[case[1]-1][case[0]+x]))
                     if piec.type == "king":
                         for x in range(-2, 3):
                             for y in range(-2, 3):
