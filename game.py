@@ -139,6 +139,28 @@ class game():
                                     break
                             else:
                                 break
+                    if piec.type == "knight" and checkColor(all, self.turn, piec):
+                        for x in range(-2, 3):
+                            for y in range(-2, 3):
+                                if abs(x) == abs(y) or x == 0 or y == 0:
+                                    continue
+                                if case[1]+y <= 7 and case[1]+y >=0 and case[0]+x <= 7 and case[0]+x >= 0:
+                                    if self.board.layout[case[1]+y][case[0]+x] == None:
+                                        moves.append(move(self.board, piec, case, (case[0]+x, case[1]+y)))
+                                    else:
+                                        if self.board.layout[case[1]+y][case[0]+x].color != piec.color:
+                                            moves.append(move(self.board, piec, case, (case[0]+x, case[1]+y), self.board.layout[case[1]+y][case[0]+x]))
+                    if piec.type == "king" and checkColor(all, self.turn, piec):
+                        for x in range(-1, 2):
+                            for y in range(-1, 2):
+                                if abs(x) == abs(y) and abs(x) == 0:
+                                    continue
+                                if case[1]+y <= 7 and case[1]+y >=0 and case[0]+x <= 7 and case[0]+x >= 0:
+                                    if self.board.layout[case[1]+y][case[0]+x] == None:
+                                        moves.append(move(self.board, piec, case, (case[0]+x, case[1]+y)))
+                                    else:
+                                        if self.board.layout[case[1]+y][case[0]+x].color != piec.color:
+                                            moves.append(move(self.board, piec, case, (case[0]+x, case[1]+y), self.board.layout[case[1]+y][case[0]+x]))
                 case = (case[0]+1, case[1])
             case = (0, case[1]+1)
         finalMoves = []
@@ -160,7 +182,7 @@ class piece():
         pass
     
 class board():
-    def __init__(self, board = [[piece("rook", "white"), piece("knight", "white"), None, piece("king", "white"), piece("queen", "white"), piece("bishop", "white"), piece("knight", "white"), piece("rook", "white")], [None, piece("pawn", "white"), piece("pawn", "white"), piece("bishop", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white")], [None, None, None, None, None, None, None, None], [None, None, None, piece("rook", "black"), None, None, None, None], [None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black")], [piece("rook", "black"), piece("knight", "black"), piece("bishop", "black"), piece("king", "black"), piece("queen", "black"), piece("bishop", "black"), piece("knight", "black"), piece("rook", "black")]]):
+    def __init__(self, board = [[piece("rook", "white"), piece("knight", "white"), piece("bishop", "white"), piece("king", "white"), piece("queen", "white"), piece("bishop", "white"), piece("knight", "white"), piece("rook", "white")], [piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white"), piece("pawn", "white")], [None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black"), piece("pawn", "black")], [piece("rook", "black"), piece("knight", "black"), piece("bishop", "black"), piece("king", "black"), piece("queen", "black"), piece("bishop", "black"), piece("knight", "black"), piece("rook", "black")]]):
         self.layout = board
     def printBoard(self):
         for row in self.layout:
@@ -258,6 +280,28 @@ class board():
                                     break
                             else:
                                 break
+                    if piec.type == "knight":
+                        for x in range(-2, 3):
+                            for y in range(-2, 3):
+                                if abs(x) == abs(y) or x == 0 or y == 0:
+                                    continue
+                                if case[1]+y <= 7 and case[1]+y >=0 and case[0]+x <= 7 and case[0]+x >= 0:
+                                    if self.layout[case[1]+y][case[0]+x] == None:
+                                        moves.append(move(self, piec, case, (case[0]+x, case[1]+y)))
+                                    else:
+                                        if self.layout[case[1]+y][case[0]+x].color != piec.color:
+                                            moves.append(move(self, piec, case, (case[0]+x, case[1]+y), self.layout[case[1]+y][case[0]+x]))
+                    if piec.type == "king":
+                        for x in range(-2, 3):
+                            for y in range(-2, 3):
+                                if abs(x) == abs(y) or x == 0 or y == 0:
+                                    continue
+                                if case[1]+y <= 7 and case[1]+y >=0 and case[0]+x <= 7 and case[0]+x >= 0:
+                                    if self.layout[case[1]+y][case[0]+x] == None:
+                                        moves.append(move(self, piec, case, (case[0]+x, case[1]+y)))
+                                    else:
+                                        if self.layout[case[1]+y][case[0]+x].color != piec.color:
+                                            moves.append(move(self, piec, case, (case[0]+x, case[1]+y), self.layout[case[1]+y][case[0]+x]))
                 case = (case[0]+1, case[1])
             case = (0, case[1]+1)
         return moves
@@ -266,16 +310,15 @@ class board():
 if __name__ == "__main__":
     newBoard = board()
     theGame = game(newBoard)
-    while True:
-        index0 = 0
-        print("Available moves:")
-        for i in theGame.legalMoves():
-            print("---")
-            print(index0)
-            i.simulate().printBoard()
-            index0 += 1
-        print("The current board:")
-        theGame.board.printBoard()
-        index = int(input())
-        theGame.move(theGame.legalMoves()[index])
+    index0 = 0
+    print("Available moves:")
+    for i in theGame.legalMoves():
+        print("---")
+        print(index0)
+        print(i.piece.type)
+        i.simulate().printBoard()
+        index0 += 1
+    print("The current board:")
     theGame.board.printBoard()
+    #index = int(input())
+    #theGame.board.printBoard()
