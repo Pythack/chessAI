@@ -1,4 +1,4 @@
-# chess AI with Python
+# Chess AI with Python
 ## The game.py program
 The game.py program is intented to manage the chess game in order for the AI.py program to play. 
 ### game.py checklist
