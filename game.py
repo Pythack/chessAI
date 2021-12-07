@@ -30,18 +30,19 @@ class move():
             6: "G",
             7: "H"
         }
-        oc = xToChar[self.origin[0]] + str(self.origin[1]+1)
-        dc = xToChar[self.destination[0]] + str(self.destination[1]+1)
+        yToChar = [0, "7", "6", "5", "4", "3", "2", "1", "0"]
+        oc = xToChar[self.origin[0]] + str(yToChar[int(self.origin[1])])
+        dc = xToChar[self.destination[0]] + str(yToChar[int(self.destination[1])])
         return oc + sep + dc
 
 
 lettersName = {
-    "rook": {"white": "♖", "black": "♜"},
-    "knight": {"white": "♘", "black": "♞"},
-    "bishop": {"white": "♗", "black": "♝"},
-    "king": {"white": "♔", "black": "♚"},
-    "queen": {"white": "♕", "black": "♛"},
-    "pawn": {"white": "♙", "black": "♟"}
+    "rook": {"black": "♖", "white": "♜"},
+    "knight": {"black": "♘", "white": "♞"},
+    "bishop": {"black": "♗", "white": "♝"},
+    "king": {"black": "♔", "white": "♚"},
+    "queen": {"black": "♕", "white": "♛"},
+    "pawn": {"black": "♙", "white": "♟"}
 }
 
 def checkColor(all, turn, piec):
@@ -64,6 +65,8 @@ class game():
             self.turn = "black"
         else:
             self.turn = "white"
+        if move.piece.color == "white" and move.destination[1] == 0:
+            pass
         return True
     def moveLit(self, lit):
         charToX = {
@@ -76,18 +79,26 @@ class game():
             "G": 6,
             "H": 7
         }
+        charToY = [8, 7, 6, 5, 4, 3, 2, 1]
         movArray = lit.strip(" ")
         movArray = [char for char in movArray]
-        origin = (charToX[movArray[0]], int(movArray[1])-1)
-        destination = (charToX[movArray[2]], int(movArray[3])-1)
+        origin = (charToX[movArray[0]], charToY[int(movArray[1])])
+        destination = (charToX[movArray[2]], charToY[int(movArray[3])])
         self.move(move(self.board, self.board.layout[origin[1]][origin[0]], origin, destination, self.board.layout[destination[1]][destination[0]]))
     def isGameOver(self):
         if len(self.legalMoves()) == 0:
-            wonCodes = {
-                "black": "White wins",
-                "white": "Black wins"
-            }
-            return wonCodes[self.turn]
+            checkMate = False
+            for mov in self.legalMoves(all = True):
+                if mov.eats:
+                    if mov.eats.type == "king" and mov.eats.color == self.turn:
+                        checkMate = True
+                        wonCodes = {
+                            "black": "White wins",
+                            "white": "Black wins"
+                        }
+                        return wonCodes[self.turn]
+            if not checkMate:
+                return "Stalemate"
         return False
     def legalMoves(self, all = False):
         moves = []
@@ -332,7 +343,7 @@ class board():
         self.layout = board
     def printBoard(self):
         print("  A;B;C;D;E;F;G;H")
-        rowN = 1
+        rowN = 8
         for row in self.layout:
             print(str(rowN)+" ", end="")
             for piec in row:
@@ -341,7 +352,7 @@ class board():
                 else:
                     print(" ", end=";")
             print()
-            rowN += 1
+            rowN -= 1
     def legalMoves(self):
         moves = []
         case = (0, 0)
