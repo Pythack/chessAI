@@ -30,7 +30,7 @@ class move():
             6: "G",
             7: "H"
         }
-        yToChar = [0, "7", "6", "5", "4", "3", "2", "1", "0"]
+        yToChar = ["8", "7", "6", "5", "4", "3", "2", "1"]
         oc = xToChar[self.origin[0]] + str(yToChar[int(self.origin[1])])
         dc = xToChar[self.destination[0]] + str(yToChar[int(self.destination[1])])
         return oc + sep + dc
@@ -79,11 +79,11 @@ class game():
             "G": 6,
             "H": 7
         }
-        charToY = [8, 7, 6, 5, 4, 3, 2, 1]
+        charToY = [7, 6, 5, 4, 3, 2, 1, 0]
         movArray = lit.strip(" ")
         movArray = [char for char in movArray]
-        origin = (charToX[movArray[0]], charToY[int(movArray[1])])
-        destination = (charToX[movArray[2]], charToY[int(movArray[3])])
+        origin = (charToX[movArray[0]], charToY[int(movArray[1])-1])
+        destination = (charToX[movArray[2]], charToY[int(movArray[3])-1])
         self.move(move(self.board, self.board.layout[origin[1]][origin[0]], origin, destination, self.board.layout[destination[1]][destination[0]]))
     def isGameOver(self):
         if len(self.legalMoves()) == 0:
