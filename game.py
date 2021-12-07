@@ -84,7 +84,20 @@ class game():
         movArray = [char for char in movArray]
         origin = (charToX[movArray[0]], charToY[int(movArray[1])-1])
         destination = (charToX[movArray[2]], charToY[int(movArray[3])-1])
-        self.move(move(self.board, self.board.layout[origin[1]][origin[0]], origin, destination, self.board.layout[destination[1]][destination[0]]))
+        if self.board.layout[origin[1]][origin[0]].type == "pawn" and self.board.layout[origin[1]][origin[0]].color == "black" and origin[1] == 6:
+            print("1) Queen")
+            print("2) Bishop")
+            print("3) Knight")
+            print("4) Rook")
+            print("Please choose transformation")
+            choice = 0
+            while 1 > choice or choice > 4:
+                choice = int(input())
+            trTypes = ["queen", "bishop", "knight", "rook"]
+            choice = trTypes[choice - 1]
+            self.move(move(self.board, piece(choice, self.turn), origin, destination, self.board.layout[destination[1]][destination[0]]))
+        else:
+            self.move(move(self.board, self.board.layout[origin[1]][origin[0]], origin, destination, self.board.layout[destination[1]][destination[0]]))
     def isGameOver(self):
         if len(self.legalMoves()) == 0:
             checkMate = False
@@ -203,29 +216,49 @@ class game():
                         if piec.color == "black":
                             if case[1]+1 <= 7:
                                 if self.board.layout[case[1]+1][case[0]] == None:
-                                    moves.append(move(self.board, piec, case, (case[0], case[1]+1)))
+                                    if 1 != case[1] !=6:
+                                        moves.append(move(self.board, piec, case, (case[0], case[1]+1)))
                                     if case[1] == 1:
                                         if self.board.layout[case[1]+2][case[0]] == None:
                                             moves.append(move(self.board, piec, case, (case[0], case[1]+2)))
+                                    if case[1] == 6:
+                                        if self.board.layout[case[1]+1][case[0]] == None:
+                                            for type in ["rook", "knight", "bishop", "queen"]:
+                                                moves.append(move(self.board, piece(type, "black"), case, (case[0], case[1]+1)))
                             for x in range(-1, 2):
                                 if x == 0:
                                     continue
                                 if case[0]+x >= 0 and case[0]+x <= 7 and case[1]+1 <= 7 and self.board.layout[case[1]+1][case[0]+x] != None:
-                                    if self.board.layout[case[1]+1][case[0]+x].color != piec.color:
-                                        moves.append(move(self.board, piec, case, (case[0]+x, case[1]+1), self.board.layout[case[1]+1][case[0]+x]))
+                                    if self.board.layout[case[1]+1][case[0]+x].color != piec.color:    
+                                        if case[1] != 6:
+                                            moves.append(move(self.board, piec, case, (case[0]+x, case[1]+1), self.board.layout[case[1]+1][case[0]+x]))
+                                        else:
+                                            if self.board.layout[case[1]+1][case[0]] == None:
+                                                for type in ["rook", "knight", "bishop", "queen"]:
+                                                    moves.append(move(self.board, piece(type, "black"), case, (case[0]+x, case[1]+1), self.board.layout[case[1]+1][case[0]+x]))
                         else:
                             if case[1]-1 >= 0:
                                 if self.board.layout[case[1]-1][case[0]] == None:
-                                    moves.append(move(self.board, piec, case, (case[0], case[1]-1)))
+                                    if 1 != case[1] !=6:
+                                        moves.append(move(self.board, piec, case, (case[0], case[1]-1)))
                                     if case[1] == 6:
                                         if self.board.layout[case[1]-2][case[0]] == None:
                                             moves.append(move(self.board, piec, case, (case[0], case[1]-2)))
+                                    if case[1] == 1:
+                                        if self.board.layout[case[1]-1][case[0]] == None:
+                                            for type in ["rook", "knight", "bishop", "queen"]:
+                                                moves.append(move(self.board, piece(type, "white"), case, (case[0], case[1]-1)))
                             for x in range(-1, 2):
                                 if x == 0:
                                     continue
                                 if case[0]+x >= 0 and case[0]+x <= 7 and case[1]-1 <= 7 and self.board.layout[case[1]-1][case[0]+x] != None:
                                     if self.board.layout[case[1]-1][case[0]+x].color != piec.color:
-                                        moves.append(move(self.board, piec, case, (case[0]+x, case[1]-1), self.board.layout[case[1]-1][case[0]+x]))
+                                        if case[1] != 1:
+                                            moves.append(move(self.board, piec, case, (case[0]+x, case[1]-1), self.board.layout[case[1]+1][case[0]+x]))
+                                        else:
+                                            if self.board.layout[case[1]-1][case[0]] == None:
+                                                for type in ["rook", "knight", "bishop", "queen"]:
+                                                    moves.append(move(self.board, piece(type, "white"), case, (case[0]+x, case[1]+1), self.board.layout[case[1]-1][case[0]+x]))
                     if piec.type == "king" and checkColor(all, self.turn, piec):
                         for x in range(-1, 2):
                             for y in range(-1, 2):
@@ -456,10 +489,15 @@ class board():
                         if piec.color == "black":
                             if case[1]+1 <= 7:
                                 if self.layout[case[1]+1][case[0]] == None:
-                                    moves.append(move(self, piec, case, (case[0], case[1]+1)))
+                                    if 1 != case[1] !=6:
+                                        moves.append(move(self, piec, case, (case[0], case[1]+1)))
                                     if case[1] == 1:
                                         if self.layout[case[1]+2][case[0]] == None:
                                             moves.append(move(self, piec, case, (case[0], case[1]+2)))
+                                    if case[1] == 6:
+                                        if self.layout[case[1]+1][case[0]] == None:
+                                            for type in ["rook", "knight", "bishop", "queen"]:
+                                                moves.append(move(self, piece(type, "black"), case, (case[0], case[1]+1)))
                             for x in range(-1, 2):
                                 if x == 0:
                                     continue
@@ -476,9 +514,14 @@ class board():
                             for x in range(-1, 2):
                                 if x == 0:
                                     continue
-                                if case[0]+x >= 0 and case[0]+x <= 7 and case[1]-1 <= 7 and self.layout[case[1]-1][case[0]+x] != None:
-                                    if self.layout[case[1]-1][case[0]+x].color != piec.color:
-                                        moves.append(move(self, piec, case, (case[0]+x, case[1]-1), self.layout[case[1]-1][case[0]+x]))
+                                if case[0]+x >= 0 and case[0]+x <= 7 and case[1]+1 <= 7 and self.layout[case[1]+1][case[0]+x] != None:
+                                    if self.layout[case[1]+1][case[0]+x].color != piec.color:    
+                                        if case[1] !=6:
+                                            moves.append(move(self, piec, case, (case[0]+x, case[1]+1), self.layout[case[1]+1][case[0]+x]))
+                                        else:
+                                            if self.layout[case[1]+1][case[0]] == None:
+                                                for type in ["rook", "knight", "bishop", "queen"]:
+                                                    moves.append(move(self, piece(type, "white"), case, (case[0]+x, case[1]+1), self.layout[case[1]+1][case[0]+x]))
                     if piec.type == "king":
                         for x in range(-2, 3):
                             for y in range(-2, 3):
@@ -576,7 +619,7 @@ class board():
         return moves
 
 if __name__ == "__main__":
-    newBoard = board()
+    newBoard = board([[None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [None, None, None, piece("pawn", "white"), None, None, None, None], [None, None, None, None, piece("pawn", "black"), None, None, None], [None, None, None, piece("rook", "white"), None, None, None, None]])
     theGame = game(newBoard)
     while True:
         index0 = 0
