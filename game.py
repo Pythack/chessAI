@@ -258,7 +258,7 @@ class game():
                                         else:
                                             if self.board.layout[case[1]-1][case[0]] == None:
                                                 for type in ["rook", "knight", "bishop", "queen"]:
-                                                    moves.append(move(self.board, piece(type, "white"), case, (case[0]+x, case[1]+1), self.board.layout[case[1]-1][case[0]+x]))
+                                                    moves.append(move(self.board, piece(type, "white"), case, (case[0]+x, case[1]-1), self.board.layout[case[1]-1][case[0]+x]))
                     if piec.type == "king" and checkColor(all, self.turn, piec):
                         for x in range(-1, 2):
                             for y in range(-1, 2):
@@ -514,14 +514,14 @@ class board():
                             for x in range(-1, 2):
                                 if x == 0:
                                     continue
-                                if case[0]+x >= 0 and case[0]+x <= 7 and case[1]+1 <= 7 and self.layout[case[1]+1][case[0]+x] != None:
-                                    if self.layout[case[1]+1][case[0]+x].color != piec.color:    
-                                        if case[1] !=6:
-                                            moves.append(move(self, piec, case, (case[0]+x, case[1]+1), self.layout[case[1]+1][case[0]+x]))
+                                if case[0]+x >= 0 and case[0]+x <= 7 and case[1]-1 <= 7 and self.layout[case[1]-1][case[0]+x] != None:
+                                    if self.layout[case[1]-1][case[0]+x].color != piec.color:    
+                                        if case[1] != 6:
+                                            moves.append(move(self, piec, case, (case[0]+x, case[1]-1), self.layout[case[1]-1][case[0]+x]))
                                         else:
-                                            if self.layout[case[1]+1][case[0]] == None:
+                                            if self.layout[case[1]-1][case[0]] == None:
                                                 for type in ["rook", "knight", "bishop", "queen"]:
-                                                    moves.append(move(self, piece(type, "white"), case, (case[0]+x, case[1]+1), self.layout[case[1]+1][case[0]+x]))
+                                                    moves.append(move(self, piece(type, "white"), case, (case[0]+x, case[1]-1), self.layout[case[1]-1][case[0]+x]))
                     if piec.type == "king":
                         for x in range(-2, 3):
                             for y in range(-2, 3):
@@ -619,7 +619,7 @@ class board():
         return moves
 
 if __name__ == "__main__":
-    newBoard = board([[None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [None, None, None, piece("pawn", "white"), None, None, None, None], [None, None, None, None, piece("pawn", "black"), None, None, None], [None, None, None, piece("rook", "white"), None, None, None, None]])
+    newBoard = board([[piece("rook", "black"), None, None, None, None, None, None, None], [None, piece("pawn", "white"), None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [None, None, None, piece("pawn", "white"), None, None, None, None], [None, None, None, None, piece("pawn", "black"), None, None, None], [None, None, None, piece("rook", "white"), None, None, None, None]])
     theGame = game(newBoard)
     while True:
         index0 = 0
