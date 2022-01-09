@@ -626,6 +626,8 @@ if __name__ == "__main__":
 
     display = pygame.display.set_mode((dispw, disph))
     pygame.display.set_caption('Échecs du club de coding EIB Étoile')
+    icon = pygame.image.load('./images/icon.png')
+    pygame.display.set_icon(icon)
     #icon = pygame.image.load(resource_path('./images/icon.png'))
     #pygame.display.set_icon(icon)
     clock = pygame.time.Clock()
