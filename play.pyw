@@ -223,7 +223,7 @@ class game():
                         if piec.color == "black":
                             if case[1]+1 <= 7:
                                 if self.board.layout[case[1]+1][case[0]] == None:
-                                    if 1 != case[1] !=6:
+                                    if 0 != case[1] != 7:
                                         moves.append(move(self.board, piec, case, (case[0], case[1]+1)))
                                     if case[1] == 1:
                                         if self.board.layout[case[1]+2][case[0]] == None:
@@ -246,7 +246,7 @@ class game():
                         else:
                             if case[1]-1 >= 0:
                                 if self.board.layout[case[1]-1][case[0]] == None:
-                                    if 1 != case[1] !=6:
+                                    if 0 != case[1] != 7:
                                         moves.append(move(self.board, piec, case, (case[0], case[1]-1)))
                                     if case[1] == 6:
                                         if self.board.layout[case[1]-2][case[0]] == None:
@@ -496,7 +496,7 @@ class board():
                         if piec.color == "black":
                             if case[1]+1 <= 7:
                                 if self.layout[case[1]+1][case[0]] == None:
-                                    if 1 != case[1] !=6:
+                                    if 0 != case[1] != 7:
                                         moves.append(move(self, piec, case, (case[0], case[1]+1)))
                                     if case[1] == 1:
                                         if self.layout[case[1]+2][case[0]] == None:
@@ -513,6 +513,8 @@ class board():
                                         moves.append(move(self, piec, case, (case[0]+x, case[1]+1), self.layout[case[1]+1][case[0]+x]))
                         else:
                             if case[1]-1 >= 0:
+                                if 0 != case[1] != 7:
+                                        moves.append(move(self, piec, case, (case[0], case[1]-1)))
                                 if self.layout[case[1]-1][case[0]] == None:
                                     moves.append(move(self, piec, case, (case[0], case[1]-1)))
                                     if case[1] == 6:
@@ -530,9 +532,9 @@ class board():
                                                 for type in ["rook", "knight", "bishop", "queen"]:
                                                     moves.append(move(self, piece(type, "white"), case, (case[0]+x, case[1]-1), self.layout[case[1]-1][case[0]+x]))
                     if piec.type == "king":
-                        for x in range(-2, 3):
-                            for y in range(-2, 3):
-                                if abs(x) == abs(y) or x == 0 or y == 0:
+                        for x in range(-1, 2):
+                            for y in range(-1, 2):
+                                if abs(x) == abs(y) and abs(x) == 0:
                                     continue
                                 if case[1]+y <= 7 and case[1]+y >=0 and case[0]+x <= 7 and case[0]+x >= 0:
                                     if self.layout[case[1]+y][case[0]+x] == None:
@@ -648,7 +650,7 @@ if __name__ == "__main__":
     disph = 900
 
     display = pygame.display.set_mode((dispw, disph))
-    pygame.display.set_caption('Échecs du club de coding EIB Étoile')
+    pygame.display.set_caption('Chess AI of the EIB Étoile coding club')
     icon = pygame.image.load('./images/icon.png')
     pygame.display.set_icon(icon)
     #icon = pygame.image.load(resource_path('./images/icon.png'))
@@ -834,6 +836,9 @@ if __name__ == "__main__":
                             pygame.draw.circle(display, (0, 255, 0), tiles[movement.toStr("x").split("x")[1].lower()].center, 15, 0)
                 else:
                     pygame.draw.rect(display, (255, 0, 0), selectedCase,  2)
+                    for movement in theGame.board.legalMoves():
+                        if theGame.board.layout[movement.origin[1]][movement.origin[0]] == theGame.board.layout[8-int(selectedCaseName[1])][ord(selectedCaseName[0])-97]:
+                            pygame.draw.circle(display, (255, 0, 0), tiles[movement.toStr("x").split("x")[1].lower()].center, 15, 0)
         
         writeText("Turn: {}".format(theGame.turn), (0, 0, 0), (10, 805), False)
         writeText("Number of turns: {}".format(theGame.nTurn), (0, 0, 0), (10, 830), False)
