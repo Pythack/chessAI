@@ -37,15 +37,6 @@ class move():
         return oc + sep + dc
 
 
-lettersName = {
-    "rook": {"black": "♖", "white": "♜"},
-    "knight": {"black": "♘", "white": "♞"},
-    "bishop": {"black": "♗", "white": "♝"},
-    "king": {"black": "♔", "white": "♚"},
-    "queen": {"black": "♕", "white": "♛"},
-    "pawn": {"black": "♙", "white": "♟"}
-}
-
 def checkColor(all, turn, piec):
     checkColor = piec.color == turn
     if all:
@@ -619,6 +610,15 @@ class board():
             case = (0, case[1]+1)
         return moves
 
+lettersName = {
+    "rook": {"black": "♖", "white": "♜"},
+    "knight": {"black": "♘", "white": "♞"},
+    "bishop": {"black": "♗", "white": "♝"},
+    "king": {"black": "♔", "white": "♚"},
+    "queen": {"black": "♕", "white": "♛"},
+    "pawn": {"black": "♙", "white": "♟"}
+}
+
 if __name__ == "__main__":
     pygame.init()
     dispw = 800
@@ -632,9 +632,9 @@ if __name__ == "__main__":
     pygame.font.init()
     myfont = pygame.font.SysFont('Times New Roman', 30)
     game_over = False
-    newBoard = board([[piece("rook", "black"), None, None, None, None, None, None, None], [None, piece("pawn", "white"), None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [None, None, None, None, None, None, None, None], [None, None, None, piece("pawn", "white"), None, None, None, None], [None, None, None, None, piece("pawn", "black"), None, None, None], [None, None, None, piece("rook", "white"), None, None, None, None]])
+    newBoard = board()
     theGame = game(newBoard)
-    cases = {
+    tiles = {
         "a8": pygame.Rect((0, 0), (100, 100)),
         "b8": pygame.Rect((100, 0), (100, 100)),
         "c8": pygame.Rect((200, 0), (100, 100)),
@@ -700,85 +700,118 @@ if __name__ == "__main__":
         "g1": pygame.Rect((600, 700), (100, 100)),
         "h1": pygame.Rect((700, 700), (100, 100)),
     }
+    pieces = {
+        "rook": {"black": pygame.image.load("./images/rookb.png").convert_alpha(), "white": pygame.image.load("./images/rookw.png").convert_alpha()},
+        "knight": {"black": pygame.image.load("./images/knightb.png").convert_alpha(), "white": pygame.image.load("./images/knightw.png").convert_alpha()},
+        "bishop": {"black": pygame.image.load("./images/bishopb.png").convert_alpha(), "white": pygame.image.load("./images/bishopw.png").convert_alpha()},
+        "king": {"black": pygame.image.load("./images/kingb.png").convert_alpha(), "white": pygame.image.load("./images/kingw.png").convert_alpha()},
+        "queen": {"black": pygame.image.load("./images/queenb.png").convert_alpha(), "white": pygame.image.load("./images/queenw.png").convert_alpha()},
+        "pawn": {"black": pygame.image.load("./images/pawnb.png").convert_alpha(), "white": pygame.image.load("./images/pawnw.png").convert_alpha()}
+    }
     selectedCase = None
+    selectedCaseName = None
     while not game_over:
+        moved = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_over = True
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                for index, case in cases.items():
+                for index, case in tiles.items():
                     if case.collidepoint(event.pos):
-                        selectedCase = case
+                        for movement in theGame.legalMoves():
+                            if movement.toStr("x").split("x")[1].lower() == index and movement.toStr("x").split("x")[0].lower() == selectedCaseName:
+                                theGame.move(movement)
+                                moved = True
+                        if not moved:
+                            selectedCase = case
+                            selectedCaseName = index
         display.fill((0, 0, 0))
         
-        pygame.draw.rect(display, (255, 206, 158), cases["a8"])
-        pygame.draw.rect(display, (209, 139, 71), cases["a7"])
-        pygame.draw.rect(display, (255, 206, 158), cases["a6"])
-        pygame.draw.rect(display, (209, 139, 71), cases["a5"])
-        pygame.draw.rect(display, (255, 206, 158), cases["a4"])
-        pygame.draw.rect(display, (209, 139, 71), cases["a3"])
-        pygame.draw.rect(display, (255, 206, 158), cases["a2"])
-        pygame.draw.rect(display, (209, 139, 71), cases["a1"])
-        pygame.draw.rect(display, (209, 139, 71), cases["b8"])
-        pygame.draw.rect(display, (255, 206, 158), cases["b7"])
-        pygame.draw.rect(display, (209, 139, 71), cases["b6"])
-        pygame.draw.rect(display, (255, 206, 158), cases["b5"])
-        pygame.draw.rect(display, (209, 139, 71), cases["b4"])
-        pygame.draw.rect(display, (255, 206, 158), cases["b3"])
-        pygame.draw.rect(display, (209, 139, 71), cases["b2"])
-        pygame.draw.rect(display, (255, 206, 158), cases["b1"])
-        pygame.draw.rect(display, (255, 206, 158), cases["c8"])
-        pygame.draw.rect(display, (209, 139, 71), cases["c7"])
-        pygame.draw.rect(display, (255, 206, 158), cases["c6"])
-        pygame.draw.rect(display, (209, 139, 71), cases["c5"])
-        pygame.draw.rect(display, (255, 206, 158), cases["c4"])
-        pygame.draw.rect(display, (209, 139, 71), cases["c3"])
-        pygame.draw.rect(display, (255, 206, 158), cases["c2"])
-        pygame.draw.rect(display, (209, 139, 71), cases["c1"])
-        pygame.draw.rect(display, (209, 139, 71), cases["d8"])
-        pygame.draw.rect(display, (255, 206, 158), cases["d7"])
-        pygame.draw.rect(display, (209, 139, 71), cases["d6"])
-        pygame.draw.rect(display, (255, 206, 158), cases["d5"])
-        pygame.draw.rect(display, (209, 139, 71), cases["d4"])
-        pygame.draw.rect(display, (255, 206, 158), cases["d3"])
-        pygame.draw.rect(display, (209, 139, 71), cases["d2"])
-        pygame.draw.rect(display, (255, 206, 158), cases["d1"])
-        pygame.draw.rect(display, (255, 206, 158), cases["e8"])
-        pygame.draw.rect(display, (209, 139, 71), cases["e7"])
-        pygame.draw.rect(display, (255, 206, 158), cases["e6"])
-        pygame.draw.rect(display, (209, 139, 71), cases["e5"])
-        pygame.draw.rect(display, (255, 206, 158), cases["e4"])
-        pygame.draw.rect(display, (209, 139, 71), cases["e3"])
-        pygame.draw.rect(display, (255, 206, 158), cases["e2"])
-        pygame.draw.rect(display, (209, 139, 71), cases["e1"])
-        pygame.draw.rect(display, (209, 139, 71), cases["f8"])
-        pygame.draw.rect(display, (255, 206, 158), cases["f7"])
-        pygame.draw.rect(display, (209, 139, 71), cases["f6"])
-        pygame.draw.rect(display, (255, 206, 158), cases["f5"])
-        pygame.draw.rect(display, (209, 139, 71), cases["f4"])
-        pygame.draw.rect(display, (255, 206, 158), cases["f3"])
-        pygame.draw.rect(display, (209, 139, 71), cases["f2"])
-        pygame.draw.rect(display, (255, 206, 158), cases["f1"])
-        pygame.draw.rect(display, (255, 206, 158), cases["g8"])
-        pygame.draw.rect(display, (209, 139, 71), cases["g7"])
-        pygame.draw.rect(display, (255, 206, 158), cases["g6"])
-        pygame.draw.rect(display, (209, 139, 71), cases["g5"])
-        pygame.draw.rect(display, (255, 206, 158), cases["g4"])
-        pygame.draw.rect(display, (209, 139, 71), cases["g3"])
-        pygame.draw.rect(display, (255, 206, 158), cases["g2"])
-        pygame.draw.rect(display, (209, 139, 71), cases["g1"])
-        pygame.draw.rect(display, (209, 139, 71), cases["h8"])
-        pygame.draw.rect(display, (255, 206, 158), cases["h7"])
-        pygame.draw.rect(display, (209, 139, 71), cases["h6"])
-        pygame.draw.rect(display, (255, 206, 158), cases["h5"])
-        pygame.draw.rect(display, (209, 139, 71), cases["h4"])
-        pygame.draw.rect(display, (255, 206, 158), cases["h3"])
-        pygame.draw.rect(display, (209, 139, 71), cases["h2"])
-        pygame.draw.rect(display, (255, 206, 158), cases["h1"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["a8"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["a7"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["a6"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["a5"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["a4"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["a3"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["a2"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["a1"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["b8"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["b7"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["b6"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["b5"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["b4"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["b3"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["b2"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["b1"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["c8"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["c7"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["c6"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["c5"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["c4"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["c3"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["c2"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["c1"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["d8"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["d7"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["d6"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["d5"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["d4"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["d3"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["d2"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["d1"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["e8"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["e7"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["e6"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["e5"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["e4"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["e3"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["e2"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["e1"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["f8"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["f7"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["f6"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["f5"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["f4"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["f3"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["f2"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["f1"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["g8"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["g7"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["g6"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["g5"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["g4"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["g3"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["g2"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["g1"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["h8"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["h7"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["h6"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["h5"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["h4"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["h3"])
+        pygame.draw.rect(display, (209, 139, 71), tiles["h2"])
+        pygame.draw.rect(display, (255, 206, 158), tiles["h1"])
         
+        for y in range(len(theGame.board.layout)):
+            for x in range(len(theGame.board.layout[y])):
+                tile = theGame.board.layout[y][x]
+                if tile:
+                    try:
+                        display.blit(pieces[tile.type][tile.color], tiles[chr(x+97)+str(8-y)])
+                    except:
+                        continue
         if selectedCase:
-            pygame.draw.rect(display, (0, 255, 0), selectedCase,  2)
-
+            if theGame.board.layout[8-int(selectedCaseName[1])][ord(selectedCaseName[0])-97]:
+                if theGame.board.layout[8-int(selectedCaseName[1])][ord(selectedCaseName[0])-97].color == theGame.turn:
+                    pygame.draw.rect(display, (0, 255, 0), selectedCase,  2)
+                    for movement in theGame.legalMoves():
+                        if theGame.board.layout[movement.origin[1]][movement.origin[0]] == theGame.board.layout[8-int(selectedCaseName[1])][ord(selectedCaseName[0])-97]:
+                            pygame.draw.circle(display, (0, 255, 0), tiles[movement.toStr("x").split("x")[1].lower()].center, 15, 0)
+                else:
+                    pygame.draw.rect(display, (255, 0, 0), selectedCase,  2)
+        
         pygame.display.update()
 
+        if theGame.isGameOver():
+            break
         clock.tick(30)
