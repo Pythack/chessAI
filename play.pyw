@@ -105,6 +105,21 @@ class game():
             if not checkMate:
                 return "Stalemate"
         return False
+    def status(self):
+        if len(self.legalMoves()) == 0:
+            checkMate = False
+            for mov in self.legalMoves(all = True):
+                if mov.eats:
+                    if mov.eats.type == "king" and mov.eats.color == self.turn:
+                        checkMate = True
+                        wonCodes = {
+                            "black": "White wins",
+                            "white": "Black wins"
+                        }
+                        return wonCodes[self.turn]
+            if not checkMate:
+                return "Stalemate"
+        return "Playing"
     def legalMoves(self, all = False):
         moves = []
         case = (0, 0)
@@ -619,10 +634,18 @@ lettersName = {
     "pawn": {"black": "♙", "white": "♟"}
 }
 
+def writeText(text, color, pos, highlighted):
+    textsurface = myfont.render(text, False, color)
+    textRect = textsurface.get_rect()
+    textRect.topleft = (pos)
+    if highlighted:
+        pygame.draw.rect(dis, (75, 75, 75), textRect)
+    display.blit(textsurface, textRect)
+
 if __name__ == "__main__":
     pygame.init()
     dispw = 800
-    disph = 800
+    disph = 900
 
     display = pygame.display.set_mode((dispw, disph))
     pygame.display.set_caption('Échecs du club de coding EIB Étoile')
@@ -727,7 +750,7 @@ if __name__ == "__main__":
                         if not moved:
                             selectedCase = case
                             selectedCaseName = index
-        display.fill((0, 0, 0))
+        display.fill((255, 255, 255))
         
         pygame.draw.rect(display, (255, 206, 158), tiles["a8"])
         pygame.draw.rect(display, (209, 139, 71), tiles["a7"])
@@ -812,8 +835,17 @@ if __name__ == "__main__":
                 else:
                     pygame.draw.rect(display, (255, 0, 0), selectedCase,  2)
         
+        writeText("Turn: {}".format(theGame.turn), (0, 0, 0), (10, 805), False)
+        writeText("Number of turns: {}".format(theGame.nTurn), (0, 0, 0), (10, 830), False)
+        writeText("Game status: {}".format(theGame.status()), (0, 0, 0), (10, 855), False)
+        
         pygame.display.update()
 
         if theGame.isGameOver():
             break
         clock.tick(30)
+
+while not game_over:
+    for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                game_over = True
