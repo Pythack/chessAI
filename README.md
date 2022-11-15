@@ -1,7 +1,7 @@
 # Chess AI with Python
-## The game.py program
+## `game.py`
 The game.py program is intented to manage the chess game in order for the AI.py program to play. 
-### game.py checklist
+### `game.py` checklist
 
 #### Detecting movements in the game
 - [X] Rook
